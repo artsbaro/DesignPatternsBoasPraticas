@@ -1,5 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using DesignPatternsBoasPraticas;
+using Flurl.Http;
+using System.Text.Json;
 
 //Console.WriteLine("Strategy");
 //Imposto iss = new ISS();
@@ -10,7 +12,18 @@ using DesignPatternsBoasPraticas;
 //calculador.RealizaCalculo(orcamento, iss);
 //calculador.RealizaCalculo(orcamento, icms);
 
+var response = "https://viacep.com.br/ws/01001000/json/"
+    .GetAsync()
+    .GetAwaiter()
+    .GetResult();
 
+var options = new JsonSerializerOptions
+{
+    PropertyNameCaseInsensitive = true
+};
+var endereco = JsonSerializer.Deserialize<Endereco>(response.GetStreamAsync().Result, options);
+
+Console.WriteLine(endereco.ToString());
 
 Console.WriteLine("Chain of Respons.");
 CalculadorDeDescontos calculador = new CalculadorDeDescontos();
